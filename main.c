@@ -58,7 +58,7 @@ void BailOut(char *msg)
 
 int main() {
 
-	printf("lavagimp version 1.3.2.\n");
+		printf("lavagimp version 1.3.2. Copyright (C) 2018 lavajoe\nThis program comes with ABSOLUTELY NO WARRANTY; for details see the 'LICENSE' file.\nThis is free software, and you are welcome to redistribute itunder certain conditions;\nsee the 'LICENSE' file for details.\n\n");
 
 	FILE *GIMPS;
 	if (fileExists("gimps.txt")) {
