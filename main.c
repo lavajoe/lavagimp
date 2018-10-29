@@ -58,7 +58,7 @@ void BailOut(char *msg)
 
 int main() {
 
-	printf("lavagimp version 1.3.2. Copyright (C) 2018 lavajoe\nThis program comes with ABSOLUTELY NO WARRANTY; for details see the 'LICENSE' file.\nThis is free software, and you are welcome to redistribute it under certain conditions;\nsee the 'LICENSE' file for details.\n\n");
+	printf("lavagimp version 1.3.3. Copyright (C) 2018 lavajoe\nThis program comes with ABSOLUTELY NO WARRANTY; for details see the 'LICENSE' file.\nThis is free software, and you are welcome to redistribute it under certain conditions;\nsee the 'LICENSE' file for details.\n\n");
 
 	FILE *GIMPS;
 	if (fileExists("gimps.txt")) {
@@ -232,7 +232,7 @@ int main() {
 			 strncpy(buf, gimp[randomnumber], strlen(gimp[randomnumber]));
              //buf[strlen(buf)] = '.';
              delLength = strlen(gimp[randomnumber]);
-             for (i = 0; i < strlen(gimp[randomnumber]) + 1; i++) {
+             for (i = 0; i < strlen(gimp[randomnumber]); i++) {
              	if (buf[i] == '?' || buf[i] == '>' || buf[i] == ':' || buf[i] == '!' || buf[i] == '@' || buf[i] == '#' || buf[i] == '$' || buf[i] == '%' || buf[i] == '^' || buf[i] == '&' || buf[i] == '*' || buf[i] == '(' || buf[i] == ')' || buf[i] == '_' || buf[i] == '+' || buf[i] == '"' || buf[i] == '<' || buf[i] == '|' || buf[i] == '~' || isupper(buf[i]) != 0) {
              		keybd_event(0x10,0,0,0);
              		keybd_event(VkKeyScanEx(buf[i], kl),0,0,0);
@@ -242,7 +242,10 @@ int main() {
              		keybd_event(VkKeyScanEx(buf[i], kl),0,0,0);
              		keybd_event(VkKeyScanEx(buf[i], kl),0,KEYEVENTF_KEYUP,0);
              	}
-            }
+              }
+	         keybd_event(VkKeyScanEx(' ', kl),0,0,0); //print space at the end of gimp
+             keybd_event(VkKeyScanEx(' ', kl),0,KEYEVENTF_KEYUP,0);
+
 			}
 		}
 
