@@ -52,8 +52,8 @@ int fileExists(char *filename) {
 
 void BailOut(char *msg)
 {
-  fprintf(stderr, "Exiting: %s\n", msg);
-  exit(1);
+	fprintf(stderr, "Exiting: %s\n", msg);
+	exit(1);
 }
 
 int main() {
