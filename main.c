@@ -225,26 +225,24 @@ int main() {
 				 keybd_event(0x0D,0,0,0);
 			}
 			if (mode == 1) {//regular
-             int randomnumber = rand() % (gimpN - 1) + 1;
-             int i = 0;
-             char buf[512];
-             //strcpy(buf, gimp[randomnumber]);
-			 strncpy(buf, gimp[randomnumber], strlen(gimp[randomnumber]));
-             //buf[strlen(buf)] = '.';
-             delLength = strlen(gimp[randomnumber]);
-             for (i = 0; i < strlen(gimp[randomnumber]); i++) {
-             	if (buf[i] == '?' || buf[i] == '>' || buf[i] == ':' || buf[i] == '!' || buf[i] == '@' || buf[i] == '#' || buf[i] == '$' || buf[i] == '%' || buf[i] == '^' || buf[i] == '&' || buf[i] == '*' || buf[i] == '(' || buf[i] == ')' || buf[i] == '_' || buf[i] == '+' || buf[i] == '"' || buf[i] == '<' || buf[i] == '|' || buf[i] == '~' || isupper(buf[i]) != 0) {
-             		keybd_event(0x10,0,0,0);
-             		keybd_event(VkKeyScanEx(buf[i], kl),0,0,0);
-             		keybd_event(VkKeyScanEx(buf[i], kl),0,KEYEVENTF_KEYUP,0);
-             		keybd_event(0x10,0,KEYEVENTF_KEYUP,0);
-             	} else {
-             		keybd_event(VkKeyScanEx(buf[i], kl),0,0,0);
-             		keybd_event(VkKeyScanEx(buf[i], kl),0,KEYEVENTF_KEYUP,0);
-             	}
-              }
-	         keybd_event(VkKeyScanEx(' ', kl),0,0,0); //print space at the end of gimp
-             keybd_event(VkKeyScanEx(' ', kl),0,KEYEVENTF_KEYUP,0);
+				int randomnumber = rand() % (gimpN - 1) + 1;
+             			int i = 0;
+             			char buf[512];
+				strncpy(buf, gimp[randomnumber], strlen(gimp[randomnumber]));
+             			delLength = strlen(gimp[randomnumber]);
+             			for (i = 0; i < strlen(gimp[randomnumber]); i++) {
+             				if (buf[i] == '?' || buf[i] == '>' || buf[i] == ':' || buf[i] == '!' || buf[i] == '@' || buf[i] == '#' || buf[i] == '$' || buf[i] == '%' || buf[i] == '^' || buf[i] == '&' || buf[i] == '*' || buf[i] == '(' || buf[i] == ')' || buf[i] == '_' || buf[i] == '+' || buf[i] == '"' || buf[i] == '<' || buf[i] == '|' || buf[i] == '~' || isupper(buf[i]) != 0) {
+             					keybd_event(0x10,0,0,0);
+             					keybd_event(VkKeyScanEx(buf[i], kl),0,0,0);
+             					keybd_event(VkKeyScanEx(buf[i], kl),0,KEYEVENTF_KEYUP,0);
+             					keybd_event(0x10,0,KEYEVENTF_KEYUP,0);
+             				} else {
+             					keybd_event(VkKeyScanEx(buf[i], kl),0,0,0);
+             					keybd_event(VkKeyScanEx(buf[i], kl),0,KEYEVENTF_KEYUP,0);
+             				}
+              			}
+	         		keybd_event(VkKeyScanEx(' ', kl),0,0,0); //print space at the end of gimp
+             			keybd_event(VkKeyScanEx(' ', kl),0,KEYEVENTF_KEYUP,0);
 
 			}
 		}
