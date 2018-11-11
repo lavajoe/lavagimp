@@ -1,3 +1,3 @@
-main: lavagimp.c
+main: main.c
 	cls
-	gcc lavagimp.c -o bin/lavagimp.exe -lconfig.dll
+	gcc lavagimp.h keys.c main.c -o bin/lavagimp.exe -lconfig.dll

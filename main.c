@@ -1,5 +1,5 @@
 /*
-	lavagimp, autotype random quotes (gimps) by pressing hotkeys
+    lavagimp, autotype random quotes (gimps) by pressing hotkeys
 	
     Copyright (C) 2018  lavajoe <joe89gunnar@gmail.com>
 
@@ -20,12 +20,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <windows.h>
+//#include <windows.h>
 #include <ctype.h>
 #include <unistd.h>
 #include <conio.h>
 
 #include <libconfig.h>
+#include "lavagimp.h"
 
 char gimp[999999][512];
 int gimpN = 0;
@@ -60,15 +61,16 @@ void BailOut(char *msg)
 
 int main() {
 
-	printf("lavagimp version 2.0.0 (development version). Copyright (C) 2018 lavajoe\nThis program comes with ABSOLUTELY NO WARRANTY; for details see the 'LICENSE' file.\nThis is free software, and you are welcome to redistribute it under certain conditions;\nsee the 'LICENSE' file for details.\n\n");
+	printf("lavagimp version 2.0.0-a2 (development version). Copyright (C) 2018 lavajoe\nThis program comes with ABSOLUTELY NO WARRANTY; for details see the 'LICENSE' file.\nThis is free software, and you are welcome to redistribute it under certain conditions;\nsee the 'LICENSE' file for details.\n\n");
 	
 	//Load config file
-
 	config_t cfg;
 	
 	const char *gimpfilecfg;
 	config_init(&cfg);
 	const char *modekey2;
+	const char *insertkey2;
+	const char *deletegimp2;
 	if (config_read_file(&cfg, "config/config.cfg") == CONFIG_FALSE) {
 		printf("Error parsing config file: %s.\n",config_error_text(&cfg));
 	}
@@ -77,38 +79,52 @@ int main() {
 	if (config_lookup_string(&cfg, "gimpfile", &gimpfilecfg) == CONFIG_FALSE) {
 		printf("Error parsing config file: %s.\n",config_error_text(&cfg));
 	}
+	if (config_lookup_string(&cfg, "insertgimp", &insertkey2) == CONFIG_FALSE) {
+		printf("Error parsing config file: %s.\n",config_error_text(&cfg));
+	}
 	if (config_lookup_string(&cfg, "changemode", &modekey2) == CONFIG_FALSE) {
+		printf("Error parsing config file: %s.\n",config_error_text(&cfg));
+	}
+	if (config_lookup_string(&cfg, "deletegimp", &deletegimp2) == CONFIG_FALSE) {
 		printf("Error parsing config file: %s.\n",config_error_text(&cfg));
 	}
 	//UINT modekey = modekey2;
 	char gimpfile[64];
 	strcpy(gimpfile, gimpfilecfg);
+
+	char insertgimp3[64];
+	strcpy(insertgimp3, insertkey2);
+
 	char modekey3[64];
 	strcpy(modekey3, modekey2);
-	UINT modekey = 69696969;
 
-	if (strcmp("home", modekey3) == 0) {
-	  modekey = 0x24;
+
+	char deletegimp3[64];
+	strcpy(deletegimp3, deletegimp2);
+
+	UINT modekey = 69696969;
+	UINT insertkey = 69696969;
+	UINT deletegimp = 69696969;
+
+        insertkey = findKey(insertgimp3);
+	if (insertkey == 69696969) {
+	  	printf("Invalid hotkey: %s\n",insertgimp3);
+	  	getchar();
+	  	exit(1);
 	}
-	if (strcmp("delete", modekey3) == 0) {
-	  modekey = 0x2E;
-	}
-	if (strcmp("insert", modekey3) == 0) {
-	  modekey = 0x2D;
-	}
-	if (strcmp("page_up", modekey3) == 0) {
-	  modekey = 0x21;
-	}
-	if (strcmp("page_down", modekey3) == 0) {
-	  modekey = 0x22;
-	}
-	if (strcmp("end", modekey3) == 0) {
-	  modekey = 0x23;
-	}
+
+        modekey = findKey(modekey3);
 	if (modekey == 69696969) {
-	  printf("Invalid hotkey: %s\n",modekey3);
-	  getchar();
-	  exit(1);
+	  	printf("Invalid hotkey: %s\n",modekey3);
+	  	getchar();
+	  	exit(1);
+	}
+
+        deletegimp = findKey(deletegimp3);
+	if (deletegimp == 69696969) {
+	  	printf("Invalid hotkey: %s\n",deletegimp3);
+	  	getchar();
+	  	exit(1);
 	}
 
 	printf("Loaded gimplist from: %s.\n",gimpfile);
@@ -150,9 +166,9 @@ int main() {
 
 	UINT hk = NULL;
     
-	RegisterHotKey(NULL, 1, hk, 0x2D);
+	RegisterHotKey(NULL, 1, hk, insertkey);
 	RegisterHotKey(NULL, 2, hk, modekey);
-	RegisterHotKey(NULL, 3, hk, 0x23);
+	RegisterHotKey(NULL, 3, hk, deletegimp);
 	RegisterHotKey(NULL, 4, hk, 0xA5);
 	
 
