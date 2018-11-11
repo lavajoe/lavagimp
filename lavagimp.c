@@ -60,7 +60,7 @@ void BailOut(char *msg)
 
 int main() {
 
-	printf("lavagimp version 1.3.3. Copyright (C) 2018 lavajoe\nThis program comes with ABSOLUTELY NO WARRANTY; for details see the 'LICENSE' file.\nThis is free software, and you are welcome to redistribute it under certain conditions;\nsee the 'LICENSE' file for details.\n\n");
+	printf("lavagimp version 2.0.0 (development version). Copyright (C) 2018 lavajoe\nThis program comes with ABSOLUTELY NO WARRANTY; for details see the 'LICENSE' file.\nThis is free software, and you are welcome to redistribute it under certain conditions;\nsee the 'LICENSE' file for details.\n\n");
 	
 	//Load config file
 
