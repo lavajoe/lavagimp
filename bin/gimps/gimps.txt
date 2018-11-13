@@ -1,5 +1,8 @@
-asdasdda
-sda
-d
-asdasdda
-sd
+fuck1
+fuck2
+fuck3
+fuck4
+fuck5
+fuck6
+delLength = strlen(buf);
+delLength = strlen(buf);

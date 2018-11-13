@@ -24,6 +24,7 @@
 #include <ctype.h>
 #include <unistd.h>
 #include <conio.h>
+#include <stdbool.h>
 
 #include <libconfig.h>
 #include "lavagimp.h"
@@ -61,7 +62,7 @@ void BailOut(char *msg)
 
 int main() {
 
-	printf("lavagimp version 2.0.0-a2 (development version). Copyright (C) 2018 lavajoe\nThis program comes with ABSOLUTELY NO WARRANTY; for details see the 'LICENSE' file.\nThis is free software, and you are welcome to redistribute it under certain conditions;\nsee the 'LICENSE' file for details.\n\n");
+	printf("lavagimp version 2.0.0-a3 (development version). Copyright (C) 2018 lavajoe\nThis program comes with ABSOLUTELY NO WARRANTY; for details see the 'LICENSE' file.\nThis is free software, and you are welcome to redistribute it under certain conditions;\nsee the 'LICENSE' file for details.\n\n");
 	
 	//Load config file
 	config_t cfg;
@@ -71,6 +72,12 @@ int main() {
 	const char *modekey2;
 	const char *insertkey2;
 	const char *deletegimp2;
+	const char *beforegimp;
+	const char *aftergimp;
+	bool pbg = false;
+	bool pag = false;
+	int putenter;
+	int sleeptime;
 	if (config_read_file(&cfg, "config/config.cfg") == CONFIG_FALSE) {
 		printf("Error parsing config file: %s.\n",config_error_text(&cfg));
 	}
@@ -88,6 +95,31 @@ int main() {
 	if (config_lookup_string(&cfg, "deletegimp", &deletegimp2) == CONFIG_FALSE) {
 		printf("Error parsing config file: %s.\n",config_error_text(&cfg));
 	}
+	if (config_lookup_string(&cfg, "beforegimp", &beforegimp) == CONFIG_FALSE) {
+		printf("Error parsing config file: %s.\n",config_error_text(&cfg));
+	}
+	if (config_lookup_string(&cfg, "aftergimp", &aftergimp) == CONFIG_FALSE) {
+		printf("Error parsing config file: %s.\n",config_error_text(&cfg));
+	}
+	if (config_lookup_bool(&cfg, "putenter", &putenter) == CONFIG_FALSE) {
+		printf("Error parsing config file: %s.\n",config_error_text(&cfg));
+	}
+	if (config_lookup_int(&cfg, "sleeptime", &sleeptime) == CONFIG_FALSE) {
+		printf("Error parsing config file: %s.\n",config_error_text(&cfg));
+	}
+
+	if (strlen(beforegimp) < 1) {
+		pbg = false;
+	} else {
+		pbg = true;
+	}
+	if (strlen(aftergimp) < 1) {
+		pag = false;
+	} else {
+		pag = true;
+	}
+		
+	//printf("beforegimp: %s.\naftergimp: %s.\n",beforegimp,aftergimp);
 	//UINT modekey = modekey2;
 	char gimpfile[64];
 	strcpy(gimpfile, gimpfilecfg);
@@ -166,9 +198,21 @@ int main() {
 
 	UINT hk = NULL;
     
-	RegisterHotKey(NULL, 1, hk, insertkey);
-	RegisterHotKey(NULL, 2, hk, modekey);
-	RegisterHotKey(NULL, 3, hk, deletegimp);
+	if (RegisterHotKey(NULL, 1, hk, insertkey) == 0) {
+		printf("Failed to register insert hotkey! (Maybe you have another instance of lavagimp open)\n");
+		getchar();
+		exit(1);
+	}
+	if (RegisterHotKey(NULL, 2, hk, modekey) == 0) {
+		printf("Failed to register modechange hotkey! (Maybe you have another instance of lavagimp open)\n");
+		getchar();
+		exit(1);
+	}
+	if (RegisterHotKey(NULL, 3, hk, deletegimp) == 0) {
+		printf("Failed to register insert hotkey! (Maybe you have another instance of lavagimp open)\n");
+		getchar();
+		exit(1);
+	}
 	RegisterHotKey(NULL, 4, hk, 0xA5);
 	
 
@@ -233,7 +277,7 @@ int main() {
 					BailOut("Can't open clipboard");
 				}
 				h = GetClipboardData(CF_TEXT);
-				printf("\nPutting gimp \"%s\" into gimps.txt.\n\n", (char *)h);
+				printf("Putting gimp \"%s\" into gimps.txt.\n", (char *)h);
 				CloseClipboard();
 				
 				/*GIMPS = fopen("gimps.txt", "w");
@@ -244,10 +288,10 @@ int main() {
 				*/
 				FILE *GIMPS2;
 				//int gimpN2;
-				GIMPS2 = fopen("gimps.txt", "a+");
+				GIMPS2 = fopen(gimpfile, "a+");
 				//char gimp2[999999][512];
 				
-				if (!fileExists("gimps.txt")) {	
+				if (!fileExists(gimpfile)) {	
 					printf("gimps.txt not found!\n");
 					exit(1);
 				}
@@ -259,10 +303,16 @@ int main() {
 			if (mode == 3) {//start to bottom mode
 				 int i = 0;
 				 char buf[512];
-				 strcpy(buf, gimp[gimpLog]);
-				 buf[strlen(buf)] = ' ';
-				 delLength = strlen(gimp[gimpLog]);
-				 for (i = 0; i < strlen(gimp[gimpLog]) + 1; i++) {
+				 memset(buf, 0, 512);
+				 if (pbg) {
+					strcat(buf, beforegimp);
+				 }
+				 strcat(buf, gimp[gimpLog]);
+				 if (pag) {
+					strcat(buf, aftergimp);
+				 }
+				 delLength = strlen(buf);
+				 for (i = 0; i < strlen(buf); i++) {
 					if (buf[i] == '?' || buf[i] == '>' || buf[i] == ':' || buf[i] == '!' || buf[i] == '@' || buf[i] == '#' || buf[i] == '$' || buf[i] == '%' || buf[i] == '^' || buf[i] == '&' || buf[i] == '*' || buf[i] == '(' || buf[i] == ')' || buf[i] == '_' || buf[i] == '+' || buf[i] == '"' || buf[i] == '<' || buf[i] == '|' || buf[i] == '~' || isupper(buf[i]) != 0) {
 						keybd_event(0x10,0,0,0);
 						keybd_event(VkKeyScanEx(buf[i], kl),0,0,0);
@@ -272,6 +322,9 @@ int main() {
 						keybd_event(VkKeyScanEx(buf[i], kl),0,0,0);
 						keybd_event(VkKeyScanEx(buf[i], kl),0,KEYEVENTF_KEYUP,0);
 					}
+				 }
+				 if (putenter) {
+					 keybd_event(0x0D,0,0,0);
 				 }
 				 
 				if (gimpLog == gimpN) { gimpLog = 0; }
@@ -281,10 +334,16 @@ int main() {
 				 int randomnumber = rand() % (gimpN - 1) + 1;
 				 int i = 0;
 				 char buf[512];
-				 strcpy(buf, gimp[randomnumber]);
-				 buf[strlen(buf)] = ' ';
-				 delLength = strlen(gimp[randomnumber]);
-				 for (i = 0; i < strlen(gimp[randomnumber]) + 1; i++) {
+				 memset(buf, 0, 512);
+				 if (pbg) {
+					strcat(buf, beforegimp);
+				 }
+				 strcat(buf, gimp[randomnumber]);
+				 if (pag) {
+					strcat(buf, aftergimp);
+				 }
+				 delLength = strlen(buf);
+				 for (i = 0; i < strlen(buf); i++) {
 					if (buf[i] == '?' || buf[i] == '>' || buf[i] == ':' || buf[i] == '!' || buf[i] == '@' || buf[i] == '#' || buf[i] == '$' || buf[i] == '%' || buf[i] == '^' || buf[i] == '&' || buf[i] == '*' || buf[i] == '(' || buf[i] == ')' || buf[i] == '_' || buf[i] == '+' || buf[i] == '"' || buf[i] == '<' || buf[i] == '|' || buf[i] == '~' || isupper(buf[i]) != 0) {
 						keybd_event(0x10,0,0,0);
 						keybd_event(VkKeyScanEx(buf[i], kl),0,0,0);
@@ -294,17 +353,27 @@ int main() {
 						keybd_event(VkKeyScanEx(buf[i], kl),0,0,0);
 						keybd_event(VkKeyScanEx(buf[i], kl),0,KEYEVENTF_KEYUP,0);
 					}
-					Sleep(80); //60 before, 90 after, 75 now?
+					Sleep(sleeptime); //60 before, 90 after, 75 now?
 				 }
-				 keybd_event(0x0D,0,0,0);
+				 if (putenter) {
+					 keybd_event(0x0D,0,0,0);
+				 }
 			}
 			if (mode == 1) {//regular
 				int randomnumber = rand() % (gimpN - 1) + 1;
              			int i = 0;
              			char buf[512];
-				strncpy(buf, gimp[randomnumber], strlen(gimp[randomnumber]));
-             			delLength = strlen(gimp[randomnumber]);
-             			for (i = 0; i < strlen(gimp[randomnumber]); i++) {
+				memset(buf, 0, 512);
+				if (pbg) {
+					strcat(buf, beforegimp);
+				}
+				//strncpy(buf, gimp[randomnumber], strlen(gimp[randomnumber]));
+				strcat(buf, gimp[randomnumber]);
+				if (pag) {
+					strcat(buf, aftergimp);
+				}
+             			delLength = strlen(buf);
+             			for (i = 0; i < strlen(buf); i++) {
              				if (buf[i] == '?' || buf[i] == '>' || buf[i] == ':' || buf[i] == '!' || buf[i] == '@' || buf[i] == '#' || buf[i] == '$' || buf[i] == '%' || buf[i] == '^' || buf[i] == '&' || buf[i] == '*' || buf[i] == '(' || buf[i] == ')' || buf[i] == '_' || buf[i] == '+' || buf[i] == '"' || buf[i] == '<' || buf[i] == '|' || buf[i] == '~' || isupper(buf[i]) != 0) {
              					keybd_event(0x10,0,0,0);
              					keybd_event(VkKeyScanEx(buf[i], kl),0,0,0);
@@ -315,8 +384,11 @@ int main() {
              					keybd_event(VkKeyScanEx(buf[i], kl),0,KEYEVENTF_KEYUP,0);
              				}
               			}
-	         		keybd_event(VkKeyScanEx(' ', kl),0,0,0); //print space at the end of gimp
-             			keybd_event(VkKeyScanEx(' ', kl),0,KEYEVENTF_KEYUP,0);
+				if (putenter) {
+					 keybd_event(0x0D,0,0,0);
+				}
+	         		//keybd_event(VkKeyScanEx(' ', kl),0,0,0); //print space at the end of gimp
+             			//keybd_event(VkKeyScanEx(' ', kl),0,KEYEVENTF_KEYUP,0);
 
 			}
 		}

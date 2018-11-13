@@ -1,3 +1,8 @@
+v2.0.0-a3 (pre-release current development):
+	Added the ability to add a phrase before or after a gimp in config
+	Added the ability to auto press enter or not in config
+	Added the ability to set time between keypresses in slow type mode in config
+	Check for errors registering the hotkeys when lavagimp starts, will warn you if another instance of lavagimp is already running
 v2.0.0-a2 (pre-release current development):
 	Added a version number for development builds, the first build for lavagimp 2.0.0 is a1, the current one as of now is a2, sorry for
 	any confusion.
