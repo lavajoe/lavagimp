@@ -1,8 +1,4 @@
-fuck1
-fuck2
-fuck3
-fuck4
-fuck5
-fuck6
-delLength = strlen(buf);
-delLength = strlen(buf);
+test1
+test2
+test3
+test4
