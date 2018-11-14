@@ -1,0 +1,19 @@
+v2.0.0-a3 (pre-release current development):
+	Added the ability to add a phrase before or after a gimp in config
+	Added the ability to auto press enter or not in config
+	Added the ability to set time between keypresses in slow type mode in config
+	Check for errors registering the hotkeys when lavagimp starts, will warn you if another instance of lavagimp is already running
+v2.0.0-a2 (pre-release current development):
+	Added a version number for development builds, the first build for lavagimp 2.0.0 is a1, the current one as of now is a2, sorry for
+	any confusion.
+	Added the ability to change all the current hotkeys (insert gimp, change mode, delete), right now its just a few keys but more are coming soon.
+v2.0.0-a1 (pre-release current development):
+	Added gimp directory (default location of gimps.txt is gimps\gimps.txt, can change it to anything you want)
+	Added config directory which contains a config.cfg file to config lavagimp, current options are change home key to a few different keys
+	and change gimp file location.
+	Added ability to change hotkeys, only like 6 currently, not sure if I should add every single key on keyboard or just the ones that make sense
+	currently have most of the ones that make sense (to me atleast)
+v1.3.3:
+	Fix random characters being added at the end of gimps
+v1.3.2:
+	inital release
