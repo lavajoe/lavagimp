@@ -1,9 +1,0 @@
-This is a list of valid hotkeys to specify in config.cfg.  I tried to make the hotkey names as
-valid as intuitive as possible, but just to make sure heres all the valid names.
-
-Home key = "home"
-Delete key = "delete"
-Insert key = "insert"
-Page up = "page_up"
-Page down = "page_down"
-End key = "end"

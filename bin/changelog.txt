@@ -1,3 +1,5 @@
+v2.0.0:
+	Added the ability to specify a hexadecimal virtual keycode for configuring hotkeys in config.cfg, you can now use any hotkey you want from https://docs.microsoft.com/en-us/windows/desktop/inputdev/virtual-key-codes
 v2.0.0-a3 (pre-release current development):
 	Added the ability to add a phrase before or after a gimp in config
 	Added the ability to auto press enter or not in config
